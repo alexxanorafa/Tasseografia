@@ -90,6 +90,66 @@ document.addEventListener("DOMContentLoaded", () => {
         'Espada & Coração': { significado: 'Decisão emocional', detalhe: 'Equilíbrio entre razão e emoção' }
     };
 
+    // Funções auxiliares
+    function getPositionalPoetry(position, count) {
+        const phrases = {
+            superior: [
+                `${count} mensagens pairando sobre seu amanhecer`,
+                `O vento traz ${count} sinais do que está por vir`,
+                `${count} pássaros voando em direção ao seu horizonte`
+            ],
+            inferior: [
+                `${count} raízes nutrindo seu presente`,
+                `${count} sombras que moldaram sua luz atual`,
+                `${count} sementes plantadas em estações passadas`
+            ],
+            esquerda: [
+                `${count} marés movendo seu oceano interior`,
+                `${count} batidas do coração ecoando na alma`,
+                `${count} luas cheias iluminando seus sentimentos`
+            ],
+            direita: [
+                `${count} pontes construídas pela razão`,
+                `${count} mapas desenhados pelo intelecto`,
+                `${count} chaves desvendando lógica oculta`
+            ]
+        };
+        return phrases[position][Math.floor(Math.random() * phrases[position].length)];
+    }
+
+    function getSymbolCategory(symbol) {
+        for(const category in symbols) {
+            if(symbols[category].includes(symbol)) {
+                return category;
+            }
+        }
+        return null;
+    }
+
+    function getPoeticMeaning(symbol) {
+        const category = getSymbolCategory(symbol);
+        const metaphors = {
+            animals: "Um espírito guia se revela",
+            objects: "Um artefato do destino se manifesta",
+            nature: "Forças primordiais se agitam",
+            celestial: "O cosmos altera seu curso",
+            abstract: "O invisível se faz visível"
+        };
+        return metaphors[category] || "Mensagem oculta nas entrelinhas do universo";
+    }
+
+    function getPoeticReflection() {
+        const questions = [
+            "O que essa forma revela sobre seus medos mais profundos?",
+            "Como essa imagem ressoa com suas esperanças secretas?",
+            "Que diálogo você estabelece com esse símbolo silencioso?",
+            "Que verdade mascarada essa figura desvela?",
+            "Qual lição está escrita nas curvas desse símbolo?",
+            "Como esse sinal conversa com sua jornada interior?"
+        ];
+        return questions[Math.floor(Math.random() * questions.length)];
+    }
+
     function createTeaLeaves() {
         teaLeaves.innerHTML = '';
         const numberOfLeaves = Math.floor(Math.random() * 15) + 10;
@@ -152,13 +212,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function generatePositionalMeanings() {
+        const leaves = Array.from(document.querySelectorAll('.tea-leaf'));
+        const cupRect = teaCup.getBoundingClientRect();
+        
+        const positions = {
+            superior: { count: 0, symbols: [], meaning: "O amanhã sussurra" },
+            inferior: { count: 0, symbols: [], meaning: "Ecos do que foi" },
+            esquerda: { count: 0, symbols: [], meaning: "Ventos da alma" },
+            direita: { count: 0, symbols: [], meaning: "Caminhos da mente" }
+        };
+
+        leaves.forEach(leaf => {
+            const leafRect = leaf.getBoundingClientRect();
+            const vertical = (leafRect.top - cupRect.top) / cupRect.height;
+            const horizontal = (leafRect.left - cupRect.left) / cupRect.width;
+
+            if(vertical < 0.33) {
+                positions.superior.count++;
+                positions.superior.symbols.push(leaf.dataset.symbol);
+            } else if(vertical > 0.66) {
+                positions.inferior.count++;
+                positions.inferior.symbols.push(leaf.dataset.symbol);
+            }
+
+            if(horizontal < 0.33) {
+                positions.esquerda.count++;
+                positions.esquerda.symbols.push(leaf.dataset.symbol);
+            } else if(horizontal > 0.66) {
+                positions.direita.count++;
+                positions.direita.symbols.push(leaf.dataset.symbol);
+            }
+        });
+
         return `
             <div class="positional-meanings">
-                <h4>Posição na Xícara</h4>
-                <p><strong>Superior:</strong> Futuro próximo</p>
-                <p><strong>Inferior:</strong> Influências passadas</p>
-                <p><strong>Esquerda:</strong> Aspectos emocionais</p>
-                <p><strong>Direita:</strong> Fatores racionais</p>
+                <h4>Linguagem das Posições</h4>
+                ${Object.entries(positions).map(([key, pos]) => `
+                    <div class="position-section">
+                        <p class="poetic-line">${pos.meaning}:</p>
+                        ${pos.symbols.length > 0 ? `
+                            <p class="symbols-line">${pos.symbols.slice(0,3).join(' • ')}</p>
+                            <p class="interpretation-line">${getPositionalPoetry(key, pos.count)}</p>
+                        ` : `<p class="interpretation-line">Silêncio revelador nesta região</p>`}
+                    </div>
+                `).join('')}
             </div>
         `;
     }
@@ -166,7 +263,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function generateCombinationReadings(symbols) {
         const combinations = [
             { symbols: ['Borboleta', 'Flor'], message: 'Transformação positiva em relacionamentos' },
-            { symbols: ['Espada', 'Coração'], message: 'Decisão importante com impacto emocional' }
+            { symbols: ['Espada', 'Coração'], message: 'Decisão importante com impacto emocional' },
+            { symbols: ['Lua', 'Coruja'], message: 'Sabedoria intuitiva se manifestando' },
+            { symbols: ['Rio', 'Montanha'], message: 'Equilíbrio entre fluir e persistir' }
         ];
 
         const found = combinations.filter(combo => 
@@ -175,20 +274,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return found.length > 0 ? `
             <div class="combo-warning">
-                <h4>Combinações Especiais</h4>
-                ${found.map(combo => `<p>${combo.symbols.join(' + ')}: ${combo.message}</p>`).join('')}
+                <h4>Alquimia de Símbolos</h4>
+                ${found.map(combo => `
+                    <div class="combo-item">
+                        <p class="combo-symbols">${combo.symbols.join(' + ')}</p>
+                        <p class="combo-message">${combo.message}</p>
+                    </div>
+                `).join('')}
             </div>
         ` : '';
     }
 
     function generateSymbolsAnalysis(symbols) {
-        return symbols.map(symbol => `
-            <div class="symbol-card">
-                <h4>${symbol}</h4>
-                <p class="meaning">${interpretations[symbol]?.significado || 'Mensagem única para você'}</p>
-                <p class="detail">${interpretations[symbol]?.detalhe || 'Reflita sobre este símbolo em sua vida'}</p>
-            </div>
-        `).join('');
+        return symbols.map(symbol => {
+            const interpretation = interpretations[symbol] || {};
+            return `
+                <div class="symbol-card">
+                    <h4>${symbol}</h4>
+                    <p class="meaning">${interpretation.significado || getPoeticMeaning(symbol)}</p>
+                    <p class="detail">${interpretation.detalhe || getPoeticReflection()}</p>
+                </div>
+            `;
+        }).join('');
     }
 
     function showInterpretation() {
@@ -197,7 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         interpretationDiv.style.display = 'block';
         interpretationDiv.innerHTML = `
-            <h3>Interpretação Completa</h3>
+            <h3>Interpretação das Folhas</h3>
             ${generateSymbolsAnalysis(mainSymbols)}
             ${generateCombinationReadings(mainSymbols)}
             ${generatePositionalMeanings()}
