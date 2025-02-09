@@ -21,13 +21,13 @@
   h1 {
     text-align: center;
     margin: 15px 0;
-    font-size: 2.2rem;
+    font-size: 1.4rem;
     color: #2c3e50;
   }
   h3 {
     text-align: center;
     margin: 35px 0;
-    font-size: 1.4rem;
+    font-size: 1.0rem;
     color: #d4b192;
   }
   
@@ -115,7 +115,7 @@
   }
   
   .menu-item {
-    background: rgba(212, 177, 146, 0.1);
+    background: var(--secondary);
     border-radius: var(--border-radius);
     height: 40px;
     display: flex;
@@ -187,8 +187,8 @@
 }
 
 .tea-cup {
-    width: 300px;
-    height: 400px;
+    width: 150px;
+    height: 200px;
     background: #f0e6d6;
     border-radius: 0 0 150px 150px;
     position: relative;
@@ -199,9 +199,9 @@
 
 .tea-leaf {
     position: absolute;
-    width: 15px;
-    height: 15px;
-    background: #4a2c2a;
+    width: 10px;
+    height: 10px;
+    background: var(--secondary);
     border-radius: 50%;
     opacity: 0.8;
     transition: all 3s ease-out;
@@ -315,4 +315,27 @@ button:hover {
 .combo-warning h4 {
     color: #dc3545;
     margin-bottom: 10px;
+}
+.position-section {
+  margin: 15px 0;
+  padding: 10px;
+  border-left: 3px solid var(--primary);
+}
+
+.poetic-line {
+  color: var(--glow-color);
+  font-style: italic;
+  font-size: 1.1em;
+}
+
+.symbols-line {
+  color: #7a6048;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.interpretation-line {
+  color: #2c3e50;
+  font-size: 0.95em;
+  line-height: 1.4;
 }
